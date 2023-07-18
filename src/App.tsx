@@ -3,6 +3,9 @@ import { Button, PageHeader, Space, Table, Tag } from "antd";
 import './App.css'
 import { ColumnsType } from "antd/lib/table";
 import 'antd/dist/antd.css';
+import { useQuery } from "@apollo/client";
+import { GET_PRODUCTS } from "./app.gql";
+import { useEffect } from "react";
 interface DataType {
   key: string;
   name: string;
@@ -85,12 +88,17 @@ const data: DataType[] = [
 ];
 function App() {
 
+  const { data: getProd } = useQuery(GET_PRODUCTS,{variables:{productCriteria:{}}})
+
+  useEffect(() => {
+    console.log("data", getProd)
+  }, [getProd])
 
   return (
 
     <>
       <PageHeader
-        title="Roles"
+        title="Productos"
         extra={[
           <Button
             type="primary"
