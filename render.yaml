@@ -1,0 +1,6 @@
+version: 1
+services:
+  - name: stock-system-web-vite
+    buildCommand: npm run build
+    staticPublishPath: dist
+    startCommand: npm run dev
