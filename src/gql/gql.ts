@@ -13,7 +13,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\nquery productListPage($productCriteria:FilterCriteriaInfo!){\n  productListPage(productCriteria:$productCriteria){\n    data{\n      name\n    }\n    \n  }\n}": types.ProductListPageDocument,
+    "\nquery productListPage($productCriteria:FilterCriteriaInfo!){\n  productListPage(productCriteria:$productCriteria){\n    data{\n      id\n      name\n      description\n    }\n    totalRecords\n  }\n}": types.ProductListPageDocument,
 };
 
 /**
@@ -33,7 +33,7 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\nquery productListPage($productCriteria:FilterCriteriaInfo!){\n  productListPage(productCriteria:$productCriteria){\n    data{\n      name\n    }\n    \n  }\n}"): (typeof documents)["\nquery productListPage($productCriteria:FilterCriteriaInfo!){\n  productListPage(productCriteria:$productCriteria){\n    data{\n      name\n    }\n    \n  }\n}"];
+export function graphql(source: "\nquery productListPage($productCriteria:FilterCriteriaInfo!){\n  productListPage(productCriteria:$productCriteria){\n    data{\n      id\n      name\n      description\n    }\n    totalRecords\n  }\n}"): (typeof documents)["\nquery productListPage($productCriteria:FilterCriteriaInfo!){\n  productListPage(productCriteria:$productCriteria){\n    data{\n      id\n      name\n      description\n    }\n    totalRecords\n  }\n}"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

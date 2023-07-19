@@ -1,98 +1,86 @@
-import { Button, PageHeader, Space, Table, Tag } from "antd";
+import { Button, PageHeader, Space, Tag, message } from "antd";
 
 import './App.css'
 import { ColumnsType } from "antd/lib/table";
 import 'antd/dist/antd.css';
 import { useQuery } from "@apollo/client";
 import { GET_PRODUCTS } from "./app.gql";
-import { useEffect } from "react";
-interface DataType {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
-  tags: string[];
-}
+import { useEffect, useState } from "react";
+import TableWrapper, { QueryCriteria } from "./components/table-wrapper/TableWrapper";
+import { Product } from "./gql/graphql";
 
-const columns: ColumnsType<DataType> = [
+const columns: ColumnsType<Product> = [
   {
-    title: 'Name',
+    title: 'Nombre',
     dataIndex: 'name',
     key: 'name',
-    render: (text) => <a>{text}</a>,
+    render: (text) => <div>{text?.toUpperCase()}</div>,
   },
+
   {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
-  },
-  {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
-  },
-  {
-    title: 'Tags',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: (_, { tags }) => (
+    title: 'Descripción',
+    key: 'description',
+    dataIndex: 'description',
+    render: (_, { description, id }) => (
       <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? 'geekblue' : 'green';
-          if (tag === 'loser') {
-            color = 'volcano';
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
+
+        <Tag color={"geekblue"} key={id}>
+          {description?.toUpperCase()}
+        </Tag>
       </>
     ),
   },
   {
-    title: 'Action',
+    title: 'Acciones',
     key: 'action',
     render: (_, record) => (
       <Space size="middle">
-        <a>Invite {record.name}</a>
-        <a>Delete</a>
+        <a key={"edit"}>Edit</a>
+        <a key={"delete"}>Delete</a>
       </Space>
     ),
   },
 ];
 
-const data: DataType[] = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-];
 function App() {
 
-  const { data: getProd } = useQuery(GET_PRODUCTS,{variables:{productCriteria:{}}})
+  const { data: productList, loading: productListLoading, refetch: productListRefetch } = useQuery(GET_PRODUCTS, { variables: { productCriteria: {} } })
+
+  const [tableCriteria, setTableCriteria] = useState<QueryCriteria>();
+
+  const handleCreate = () => {
+    console.log("create")
+  };
+
+  const handleEdit = (row: any) => {
+    // setLocation(routeWithParams(PRIVATE_ROUTE.ROLES_EDIT, [row.id]));
+  };
+
+  const handleDelete = async (row: any) => {
+    try {
+      // const { errors } = await roleDeleteMutation({
+      //   variables: {
+      //     id: row.id,
+      //   },
+      // });
+
+      // message.success("Se ha eliminado el registro");
+
+      // execute()
+    } catch (error) {
+      // message.error("Ha ocurrido un error al realizar la operación");
+    }
+  };
 
   useEffect(() => {
-    console.log("data", getProd)
-  }, [getProd])
+    console.log("productList", productList)
+  }, [productList])
+
+  useEffect(() => {
+    if (tableCriteria) {
+      productListRefetch()
+    }
+  }, [tableCriteria]);
 
   return (
 
@@ -103,26 +91,26 @@ function App() {
           <Button
             type="primary"
             style={{ float: "right" }}
+            onClick={handleCreate}
+            key={"createButton"}
           >
             Nuevo
           </Button>,
         ]}
       />
-      <Table columns={columns} dataSource={data} />
-      {/* <TableWrapper
-          columns={columns}
-          dataSource={data?.roleList?.result as Role[]}
-          loading={loading}
-          useDefaultMenu={false}
-          onCriteriaChange={setTableCriteria}
-          onUpdate={handleEdit}
-          onDelete={handleDelete}
-          pageInfo={{
-            pageSize: 10,
-            total: data?.roleList?.pageInfo?.total!,
-          }}
-          defaultSort={defaultSort}
-        ></TableWrapper> */}
+      <TableWrapper
+        columns={columns}
+        dataSource={productList?.productListPage?.data as Product[]}
+        loading={productListLoading}
+        useDefaultMenu={false}
+        onCriteriaChange={setTableCriteria}
+        onUpdate={handleEdit}
+        onDelete={handleDelete}
+        pageInfo={{
+          pageSize: 10,
+          total: productList?.productListPage?.totalRecords ?? 0,
+        }}
+      ></TableWrapper>
     </>
   )
 }
