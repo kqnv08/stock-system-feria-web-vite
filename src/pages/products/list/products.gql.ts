@@ -1,4 +1,4 @@
-import { graphql } from "../src/gql";
+import { graphql } from "../../../gql";
 
 export const GET_PRODUCTS = graphql(`
 query productListPage($productCriteria:FilterCriteriaInfo!){
