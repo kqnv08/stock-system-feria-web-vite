@@ -1,11 +1,15 @@
 import React, { Suspense } from "react";
 import {
   createBrowserRouter,
+
+  Link,
+
   Navigate,
-  RouterProvider,
+  RouterProvider
 } from "react-router-dom";
 import PrivateRoutes from "./private-routes";
 import ErrorPage from "./error-page";
+import { Button } from "antd"
 
 const Dashboard = React.lazy(() => import("../pages/dashboard/dashboard"));
 const Products = React.lazy(() => import("../pages/products/list/products"));
@@ -28,7 +32,7 @@ export const PRIVATE_ROUTES = {
   DASHBOARD: "dashboard",
   PRODUCTS: "products"
 };
-const RedirectToPrivateRegister = () => <Navigate to="/private-register" />;
+// const RedirectToPrivateRegister = () => <Navigate to="/private-register" />;
 
 const ProtectedRoute = ({ isAuth, redirectPath = "/login", children }: any) => {
   if (!isAuth) {
@@ -41,6 +45,7 @@ const MainRoutes = () => {
   const auth = { isLogged: true };
   // const token = localStorage.getItem("token");
   const token = "sd";
+
   const router = createBrowserRouter([
     {
       path: PUBLIC_ROUTES.LOGIN,
@@ -49,7 +54,11 @@ const MainRoutes = () => {
     {
       path: PUBLIC_ROUTES.LANDING_PAGE,
       errorElement: <ErrorPage />,
-      element: <>Landing</>,
+      element: <>
+        <Link to={"/login"}>Login</Link>
+        <Link to={"/app/products"}>Productos</Link>
+        <Link to={"/app/dashboard"}>Dashboard</Link>
+      </>
     },
 
     {
