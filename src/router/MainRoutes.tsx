@@ -12,7 +12,7 @@ const Products = React.lazy(() => import("../pages/products/list/products"));
 
 export const PUBLIC_ROUTES = {
   LANDING_PAGE: "/",
-  LOGIN: "login",
+  LOGIN: "/login",
   PASSWORD_RECOVERY: "/recovery",
   REGISTER: "register",
   NOT_FOUND: "404",
